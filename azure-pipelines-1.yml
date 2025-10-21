@@ -1,21 +1,34 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
-- main
+- main   # or master, depending on your repo’s default branch
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+# Step 1: Checkout code
+- task: Checkout@1
+  displayName: 'Checkout source code'
 
+# Step 2: Set up Node.js
+- task: UseNode@1
+  inputs:
+    version: '18.x'   # use your app’s Node version
+  displayName: 'Set up Node.js'
+
+# Step 3: Install dependencies
 - script: |
     npm install
+  displayName: 'Install dependencies'
+
+# Step 4: Build React app
+- script: |
     npm run build
-  displayName: 'npm install and build'
+  displayName: 'Build React app'
+
+# Step 5: Deploy to Azure Web App
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'weather'     # your service connection name
+    appName: 'weather-app'    # replace this with your actual Azure Web App name
+    package: '$(System.DefaultWorkingDirectory)/build'
+  displayName: 'Deploy to Azure Web App'
