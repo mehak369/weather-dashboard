@@ -1,18 +1,18 @@
 trigger:
-- main   # or master, depending on your repo’s default branch
+- main   # Replace with your branch if needed
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
 # Step 1: Checkout code
-- task: Checkout@1
+- checkout: self
   displayName: 'Checkout source code'
 
 # Step 2: Set up Node.js
 - task: UseNode@1
   inputs:
-    version: '18.x'   # use your app’s Node version
+    version: '18.x'
   displayName: 'Set up Node.js'
 
 # Step 3: Install dependencies
@@ -28,7 +28,7 @@ steps:
 # Step 5: Deploy to Azure Web App
 - task: AzureWebApp@1
   inputs:
-    azureSubscription: 'weather'     # your service connection name
-    appName: 'web-gaaqhcdjlahsg'    # replace this with your actual Azure Web App name
+    azureSubscription: 'weather'         # Your service connection name
+    appName: 'web-gaaqhcdjlahsg'         # Your Azure Web App name
     package: '$(System.DefaultWorkingDirectory)/build'
-  displayName: 'Deploy to Azure Web App'
+  displayName: 'Deploy React app to Azure Web App'
