@@ -29,6 +29,6 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'weather'     # your service connection name
-    appName: 'weather-app'    # replace this with your actual Azure Web App name
+    appName: 'web-gaaqhcdjlahsg'    # replace this with your actual Azure Web App name
     package: '$(System.DefaultWorkingDirectory)/build'
   displayName: 'Deploy to Azure Web App'
