@@ -12,8 +12,12 @@ steps:
 
 # 2️⃣ Build the Vite app
 - script: |
+    echo "Building with API Key..."
     npm run build
   displayName: "Build Vite App"
+  env:
+    VITE_API_KEY: $(VITE_API_KEY)
+
 
 # 3️⃣ Publish build artifact
 - task: PublishPipelineArtifact@1
