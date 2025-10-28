@@ -1,0 +1,56 @@
+# Azure DevOps pipeline for React + Node app
+trigger:
+  branches:
+    include:
+      - main   # or your main branch name
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  node_version: '18.x'
+
+stages:
+  - stage: Build
+    displayName: "Build Stage"
+    jobs:
+      - job: Build
+        displayName: "Build React Frontend and Node Backend"
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(node_version)'
+            displayName: "Install Node.js"
+
+          - script: |
+              echo "Installing frontend dependencies..."
+              cd frontend
+              npm ci
+              npm run build
+            displayName: "Build Frontend"
+
+          - script: |
+              echo "Installing backend dependencies..."
+              cd server
+              npm ci
+            displayName: "Install Backend Dependencies"
+
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: 'frontend/dist'
+              artifact: 'weather-frontend'
+            displayName: "Publish Frontend Build Artifact"
+
+  - stage: Deploy
+    displayName: "Deploy Stage"
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - job: Deploy
+        displayName: "Deploy to Azure Web App (manual trigger)"
+        steps:
+          - download: current
+            artifact: weather-frontend
+          - script: |
+              echo "Deploy step placeholder - configure when Azure App is ready."
+            displayName: "Deploy (placeholder)"
