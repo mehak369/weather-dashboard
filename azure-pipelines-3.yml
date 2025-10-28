@@ -7,21 +7,26 @@ pool:
 steps:
 # 1️⃣ Install dependencies
 - script: |
-    echo "Installing dependencies..."
     npm ci
   displayName: "Install Dependencies"
 
 # 2️⃣ Build the Vite app
 - script: |
-    echo "Building project..."
     npm run build
-    echo "Contents of dist folder:"
-    ls -al dist
   displayName: "Build Vite App"
 
-# 3️⃣ Publish the build output as artifact
+# 3️⃣ Publish build artifact
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: 'dist'
     artifact: 'weather-frontend'
   displayName: "Publish Frontend Build Artifact"
+
+# 4️⃣ Deploy to Azure Static Web App
+- task: AzureStaticWebApp@0
+  inputs:
+    app_location: 'dist'
+    api_location: ''
+    output_location: 'dist'
+    azure_static_web_apps_api_token: '$(DEPLOYMENT_TOKEN)'
+  displayName: "Deploy to Azure Static Web App"
