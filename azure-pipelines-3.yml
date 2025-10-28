@@ -1,0 +1,27 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+# 1️⃣ Install dependencies
+- script: |
+    echo "Installing dependencies..."
+    npm ci
+  displayName: "Install Dependencies"
+
+# 2️⃣ Build the Vite app
+- script: |
+    echo "Building project..."
+    npm run build
+    echo "Contents of dist folder:"
+    ls -al dist
+  displayName: "Build Vite App"
+
+# 3️⃣ Publish the build output as artifact
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'dist'
+    artifact: 'weather-frontend'
+  displayName: "Publish Frontend Build Artifact"
